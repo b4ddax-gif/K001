@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - main
-
+env:
+  GEMINI_API_KEY: AQ.Ab8RN6KkYLkb_y6NX-2ZkTI4DX99_Gqo3TjCxpC3biYsRmvk0A
 jobs:
   build:
     runs-on: ubuntu-latest
