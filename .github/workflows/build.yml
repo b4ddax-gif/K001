@@ -26,23 +26,10 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract K001
-        run: |
-          mkdir project
-          unzip -q "k001 (1).zip" -d project
+        run: mkdir project && unzip -q "k001 (1).zip" -d project
 
-      - name: Find Android project
-        run: |
-          SETTINGS=$(find project -name "settings.gradle*" -type f | head -n 1)
-          if [ -z "$SETTINGS" ]; then
-            echo "settings.gradle not found"
-            exit 1
-          fi
-          echo "PROJECT_DIR=$(dirname "$SETTINGS")" >> "$GITHUB_ENV"
-
-      - name: Build APK
-        run: |
-          cd "$PROJECT_DIR"
-          gradle assembleDebug --no-daemon
+      - name: Build K001
+        run: cd project && gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
