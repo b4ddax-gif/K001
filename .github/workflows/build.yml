@@ -1,0 +1,11 @@
+name: Build K001
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "K001 workflow is working"
