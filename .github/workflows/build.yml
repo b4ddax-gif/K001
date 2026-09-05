@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download project
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Android
         uses: android-actions/setup-android@v3
 
-      - name: Install Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
@@ -30,18 +30,22 @@ jobs:
           mkdir project
           unzip -q "k001 (1).zip" -d project
 
-      - name: Find project
+      - name: Find Android project
         run: |
           SETTINGS=$(find project -name "settings.gradle*" -type f | head -n 1)
-
           if [ -z "$SETTINGS" ]; then
             echo "settings.gradle not found"
             exit 1
           fi
-
-          PROJECT_DIR=$(dirname "$SETTINGS")
-          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+          echo "PROJECT_DIR=$(dirname "$SETTINGS")" >> "$GITHUB_ENV"
 
       - name: Build APK
-        working-directory: ${{ env.PROJECT_DIR }}
-       
+        run: |
+          cd "$PROJECT_DIR"
+          gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: K001-APK
+          path: project/**/build/outputs/apk/debug/*.apk
